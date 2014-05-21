@@ -1,0 +1,4 @@
+<div style="float: left;"><img src="<%= @product.image_path %>"/></div>
+<h2><%= link_to "Products", :action => "list"%>/<%= link_to @product.name, :action => "view", :id => @product %></h2> <h5>Price: $<%= @product.price %> USD</h5>
+<p><%= link_to "Add to cart", :action => "add_to_cart", :id => @product %></p>
+<p><%= @product.description %></p>

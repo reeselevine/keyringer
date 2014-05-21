@@ -1,0 +1,12 @@
+<div class="alert alert-error" xmlns="http://www.w3.org/1999/html">
+  <a class="close" data-dismiss="alert">x</a>
+  <strong>
+    An error is happened during proceed payment
+  </strong>
+  <p>
+    <% @order.transactions.each do |transaction| %>
+        <%= transaction.message %><br/>
+    <% end %>
+  </p>
+</div>
+<%= link_to "Back to your order", :controller => "cart", :action => "view" %>

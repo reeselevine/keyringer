@@ -1,0 +1,55 @@
+<div class="page-header">
+  <h3 align="center">Final Order Details</h3>
+</div>
+<%= form_for current_cart, :url => {:controller => "order", :action => "payment_info"}, :method => "POST" do |f| %>
+    <table class="table table-striped">
+      <thead>
+      <tr>
+        <th>&nbsp;</th>
+        <th>Product</th>
+        <th>Quantity</th>
+        <th>Price</th>
+        <th>Amount</th>
+      </tr>
+      </thead>
+      <tbody>
+      <% current_cart.line_items.each do |line_item| %>
+          <tr align="center">
+            <td><img width="50px" height="50px" src="<%= line_item.product.image_path %>"/></td>
+            <td><%= line_item.product.name %></td>
+            <td><%= line_item.quantity %></td>
+            <td><%= line_item.product.price %></td>
+            <td><%= line_item.product.price * line_item.quantity %></td>
+          </tr>
+      <% end %>
+      <tr align="center">
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td style="font: bold">Tax</td>
+        <td>Calculated at checkout</td>
+      </tr>
+      <tr align="center">
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td style="font: bold">Shipping</td>
+        <td>Calculated at checkout</td>
+      </tr>
+      <tr align="center">
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td><b>Subtotal</b></td>
+        <td><b><%= current_cart.total_order_price %></b></td>
+      </tr>
+      </tbody>
+    </table>
+    <center>
+      <div style="padding-top: 15px;">
+        <%= link_to "Modify Order", {:controller => "cart", :action => "view"}, {:class => "btn dropdown-toggle"} %>
+        <%= link_to image_tag("https://www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif"), :controller => "order", :action => "express" %>
+        <%= f.submit :value => "Pay with Credit Card", :class => "btn dropdown-toggle" %>
+      </div>
+    </center>
+<% end %>

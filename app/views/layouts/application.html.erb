@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>KeyRinger</title>
+  <%= stylesheet_link_tag "application", :media => "all" %>
+  <%= javascript_include_tag "application" %>
+  <%= csrf_meta_tags %>
+  <%= yield(:head) %>
+</head>
+<body>
+<div class="navbar navbar-fixed-top">
+  <div class="navbar-inner">
+    <div style="float: left;line-height: 40px;mrgin-left:15px"><%= link_to "KeyRinger", :controller => "product", :action => "list" %></div>
+    <div style="float: right;line-height: 40px;mrgin-right:15px">
+      Items in cart(<%= current_cart.total_items %>) with price $<%= current_cart.total_order_price %>
+      USD  <%= link_to "Checkout", {:controller => "cart", :action => "view"} %> |
+      <%= link_to "Empty cart!", :controller => "cart", :action => "clear" %>
+    </div>
+  </div>
+</div>
+<div style="margin-top: 50px">
+  <%= yield %>
+</div>
+</body>
+</html>

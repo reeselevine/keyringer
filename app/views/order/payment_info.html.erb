@@ -1,0 +1,139 @@
+<%= nested_form_for @order, :url => {:action => "purchase"},:html=>{:class=>"well form-inline"} do |f| %>
+    <% if @order.express_token.blank? %>
+        <% unless @order.errors.empty? %>
+            <% @order.errors.full_messages.each do |msg| %>
+                <p><%= msg %></p>
+            <% end %>
+        <% end %>
+        <h4><u>Shipping Information</u></h4>
+
+        <%= f.fields_for :shipment do |shipment| %>
+            <p>
+              <%= shipment.label :name %> <br/>
+              <%= shipment.text_field :name,{:class=>"required input-large" ,:placeholder=>"Name"} %>
+            </p>
+            <p>
+              <%= shipment.label :address1 %><br/>
+              <%= shipment.text_field :address1,{:class=>"required input-large" ,:placeholder=>"Address 1"} %>
+            </p>
+            <p>
+              <%= shipment.label :address2 %><br/>
+              <%= shipment.text_field :address2,{:class=>"required input-large" ,:placeholder=>"Address 2"} %>
+            </p>
+            <p>
+              <%= shipment.label :city %><br/>
+              <%= shipment.text_field :city,{:class=>"required input-large" ,:placeholder=>"City"} %>
+            </p>
+            <p>
+              <%= shipment.label :state %>
+              <%= shipment.select :state, [["State1", "1"], ["State2", "2"], ["State3", "3"], ["State4", "4"]] %>
+              Or
+              <%= shipment.label :province %>
+              <%= shipment.text_field :province ,{:class=>"input-large" ,:placeholder=>"Province"}%>
+            </p>
+            <p>
+              <%= shipment.label :postal_code, "Zip or Postal Code" %><br/>
+              <%= shipment.text_field :postal_code,{:class=>"required input-large" ,:placeholder=>"Zip or Postal Code"} %>
+            </p>
+            <p>
+              <%= shipment.label :country %><br/>
+              <%= shipment.text_field :country,{:class=>"required input-large" ,:placeholder=>"Country"} %>
+            </p>
+            <p>
+              <%= shipment.label :method, "Shipment Method" %>
+              <%= shipment.radio_button :method, "class_mail" %> First Class Mail
+              <%= shipment.radio_button :method, "priority_mail" %> Priority Mail
+              <%= shipment.radio_button :method, "other" %> Other
+            </p>
+        <% end %>
+        <h4><u>Contact and billing Information</u></h4>
+        <p>
+          <%= f.label :first_name %><br/>
+          <%= f.text_field :first_name,{:class => "required  input-large" ,:placeholder=>"First Name"} %>
+        </p>
+        <p>
+          <%= f.label :last_name %><br/>
+          <%= f.text_field :last_name,{:class => "required  input-large" ,:placeholder=>"Last Name"} %>
+        </p>
+        <p>
+          <%= f.label :payment_method, "Card Type" %><br/>
+          <%= f.select :payment_method, [["Visa", "visa"], ["MasterCard", "master"], ["Discover", "discover"], ["American Express", "american_express"]] %>
+        </p>
+        <p>
+          <%= f.label :card_number %><br/>
+          <%= f.text_field :card_number,{:class => "required  input-large" ,:placeholder=>"Card Number"} %>
+        </p>
+        <p>
+          <%= f.label :card_verification, "Card Verification Value (CVV)" %><br/>
+          <%= f.text_field :card_verification ,{:class => "required  input-large" ,:placeholder=>"CVV"} %>
+        </p>
+        <p>
+          <%= f.label :expire_date %><br/>
+          <%= f.date_select :expire_date, :discard_day => true, :start_year => Date.today.year, :end_year => (Date.today.year+10), :add_month_numbers => true %>
+        </p>
+        <p>
+          <%= f.label :phone_number %><br/>
+          <%= f.phone_field :phone_number,{:class => "required  input-large" ,:placeholder=>"Phone Number"} %>
+        </p>
+        <p>
+          <%= f.label :email %><br/>
+          <%= f.email_field :email,{:class=>"required input-large" ,:placeholder=>"Email"} %>
+        </p>
+        <input type="checkbox" id="same_shippment" value="true" name="same_shippment" onchange="copyShipmentToContact()"/> Check if payment and shipping infromation the same
+        <p>
+          <%= f.label :address1 %><br/>
+          <%= f.text_field :address1 %>
+        </p>
+        <p>
+          <%= f.label :address2 %><br/>
+          <%= f.text_field :address2 %>
+        </p>
+        <p>
+          <%= f.label :city %><br/>
+          <%= f.text_field :city %>
+        </p>
+        <p>
+          <%= f.label :state %>
+          <%= f.select :state, [["State1", "1"], ["State2", "2"], ["State3", "3"], ["State4", "4"]] %>
+          Or
+          <%= f.label :province %> <%= f.text_field :province %>
+        </p>
+        <p>
+          <%= f.label :postal_code, "Zip or Postal Code" %><br/>
+          <%= f.text_field :postal_code %>
+        </p>
+        <p>
+          <%= f.label :country %><br/>
+          <%= f.text_field :country %>
+        </p>
+    <% else %>
+        <%= f.hidden_field :express_token %>
+        <p>Thank you, <%= @order.first_name %> <%= @order.last_name %></p>
+        <p>Your payment information has been completed through PayPal, You just need complete your order.</p>
+    <% end %>
+    <p><%= f.submit "Complete Order",:class=>"btn btn-primary" %></p>
+<% end %>
+
+<script type="text/javascript">
+  function copyShipmentToContact(){
+      var same_shippment = document.getElementById('same_shippment');
+      if (same_shippment.checked){
+          document.getElementById("order_address1").value = document.getElementById("order_shipment_attributes_address1").value;
+          document.getElementById("order_address2").value = document.getElementById("order_shipment_attributes_address2").value;
+          document.getElementById("order_city").value = document.getElementById("order_shipment_attributes_city").value;
+          document.getElementById("order_province").value = document.getElementById("order_shipment_attributes_province").value;
+          document.getElementById("order_country").value = document.getElementById("order_shipment_attributes_country").value;
+          document.getElementById("order_postal_code").value = document.getElementById("order_shipment_attributes_postal_code").value;
+          document.getElementById("order_state").value = document.getElementById("order_shipment_attributes_state").value;
+      }else{
+          document.getElementById("order_first_name").value = "";
+          document.getElementById("order_address1").value = "";
+          document.getElementById("order_address2").value = "";
+          document.getElementById("order_city").value = "";
+          document.getElementById("order_province").value = "";
+          document.getElementById("order_country").value = "";
+          document.getElementById("order_postal_code").value = "";
+          document.getElementById("order_state").value = "";
+      }
+  }
+</script>
